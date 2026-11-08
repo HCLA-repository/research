@@ -159,7 +159,7 @@ This standalone notebook generates and evaluates responses under **Standard**, *
 - API credentials must be supplied through **environment variables or an approved secret manager**. Do not commit API keys, credential-bearing notebook outputs, or local configuration files containing secrets.
 - The raw provider-supplied Bitcoin dataset is **not included**. Re-executing detector training or SHAP extraction requires authorized access to the original data and the appropriate environment.
 - Experimental outputs involving hosted LLMs may depend on API availability, model version, sampling parameters, and provider behavior.
-- Files are organized by their correspondence to the manuscript, **not** by independently verified commit-level provenance or complete end-to-end reproduction.
+
 
 ## Reference
 
