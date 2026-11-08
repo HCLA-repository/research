@@ -1,0 +1,21 @@
+﻿metric,test,comparison,statistic,p_raw,p_holm,n_cases,significant_holm_0.05
+ESR,Friedman,All 3 conditions,67.18881118881113,2.571195074881423e-15,,50,
+ESR,Wilcoxon,Standard vs Ambiguous,23.0,0.6440854065229935,0.6440854065229935,50,False
+ESR,Wilcoxon,Standard vs Adversarial,62.0,4.295155412911098e-07,8.590310825822196e-07,50,True
+ESR,Wilcoxon,Ambiguous vs Adversarial,8.0,1.2979306885689089e-08,3.893792065706727e-08,50,True
+UCR,Friedman,All 3 conditions,71.49275362318848,2.989136878436999e-16,,50,
+UCR,Wilcoxon,Standard vs Ambiguous,9.0,0.3804551252503885,0.3804551252503885,50,False
+UCR,Wilcoxon,Standard vs Adversarial,27.5,4.820347658465166e-08,9.640695316930332e-08,50,True
+UCR,Wilcoxon,Ambiguous vs Adversarial,0.0,1.1007784519202587e-08,3.302335355760776e-08,50,True
+CR,Friedman,All 3 conditions,2.9999999999998948,0.2231301601484416,,50,
+CR,Wilcoxon,Standard vs Ambiguous,13.0,0.8648125041589424,0.8648125041589424,50,False
+CR,Wilcoxon,Standard vs Adversarial,1.0,0.040479456113210154,0.12143836833963045,50,False
+CR,Wilcoxon,Ambiguous vs Adversarial,1.5,0.10405923452892792,0.20811846905785583,50,False
+constraint_adherence,Friedman,All 3 conditions,71.5460992907802,2.9104620321493217e-16,,50,
+constraint_adherence,Wilcoxon,Standard vs Ambiguous,24.0,0.7110254070787286,0.7110254070787286,50,False
+constraint_adherence,Wilcoxon,Standard vs Adversarial,5.0,2.1179759698172152e-08,4.2359519396344304e-08,50,True
+constraint_adherence,Wilcoxon,Ambiguous vs Adversarial,5.0,9.9325690697639e-09,2.97977072092917e-08,50,True
+semantic_consistency,Friedman,All 3 conditions,11.080000000000041,0.003926526838305544,,50,
+semantic_consistency,Wilcoxon,Standard vs Ambiguous,333.0,0.002799360749817126,0.005598721499634252,50,True
+semantic_consistency,Wilcoxon,Standard vs Adversarial,528.0,0.2954728324166016,0.2954728324166016,50,False
+semantic_consistency,Wilcoxon,Ambiguous vs Adversarial,279.0,0.000367116559868208,0.001101349679604624,50,True
