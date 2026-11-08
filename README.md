@@ -1,131 +1,212 @@
-# HCLA Research: Evidence-Grounded Explanations for Digital Asset Anomaly Detection
+# HCLA: Experimental Source Code and Results
 
-This repository contains Jupyter notebooks supporting experiments on **Human-Centered LLM-Agent (HCLA)** explanations for digital asset anomaly detection. The study investigates detector generalization under different feature and split settings, the grounding of LLM-generated explanations in available evidence, explanation format, architectural component contributions, and robustness.
+## Overview
 
-The experiments build upon the previously introduced HCLA framework, while examining its behavior under additional evaluation settings. The notebooks are research artifacts rather than a production deployment.
+This repository provides the experimental source code, Jupyter notebooks, and selected result files associated with the study:
 
-## Research questions
+**HCLA: A Human-Centered LLM-Agent Architecture for Contextualizing Digital Asset Anomaly Detection**
 
-| Research question | Focus | Relevant directory |
-| --- | --- | --- |
-| **RQ1** | Detector performance and generalization across address-feature and data-splitting conditions | `notebooks/00_integrated/` |
-| **RQ2** | Evidence support and unsupported claims in generated explanations | `notebooks/RQ2_evidence_validation/` |
-| **RQ3** | Comparison of alternative explanation formats | `notebooks/RQ3_explanation_comparison/` |
-| **RQ4** | Ablation of HCLA architectural components | `notebooks/RQ4_component_ablation/` |
-| **RQ5** | Robustness to repeated generation, ambiguity, and adversarial instructions | `notebooks/RQ5_robustness/` |
+The study extends the previously introduced HCLA framework by systematically evaluating detector generalization, evidence grounding, explanation quality, architectural components, and robustness.
 
-Additional post-hoc statistical analysis for RQ3–RQ5 is provided under `notebooks/statistical_analysis/`.
+The repository is organized around five research questions (RQ1–RQ5) to support transparency, result verification, and reproducibility.
 
-## Repository structure
+## Research Questions
 
-```text
-research/
-├── README.md
-└── notebooks/
-    ├── 00_integrated/
-    │   └── HCLA_Qwen_Llama_OpenRouter_Checkpoint_Resume.ipynb
-    ├── RQ2_evidence_validation/
-    │   ├── HCLA_RQ2_LIGHT_LGBM_50plus10x10.ipynb
-    │   ├── HCLA_RQ2_FAST_FULL_5workers.ipynb
-    │   ├── HCLA_RQ2_TRUE_ONECLICK_NO_PREV_VARS.ipynb
-    │   ├── HCLA_RQ2_LIGHT_LGBM_100rows_5workers.ipynb
-    │   └── HCLA_RQ2_ONECLICK_From_RQ1_PKL.ipynb
-    ├── RQ3_explanation_comparison/
-    │   ├── HCLA_RQ3_4Methods_RevisedMetrics.ipynb
-    │   └── HCLA_RQ3_4Methods_50Cases.ipynb
-    ├── RQ4_component_ablation/
-    │   └── RQ4_ONLY_HCLA_Component_Ablation.ipynb
-    ├── RQ5_robustness/
-    │   └── RQ5_Standalone_NoJSON.ipynb
-    └── statistical_analysis/
-        └── HCLA_RQ3_RQ4_RQ5_PostHoc_Statistics.ipynb
-```
+### RQ1 — Detector Generalization
 
-### Integrated notebook and RQ1
+**Research Question:** To what extent does the Evidence Scoring module generalize beyond recurring address-level associations?
 
-`00_integrated/HCLA_Qwen_Llama_OpenRouter_Checkpoint_Resume.ipynb` is **not exclusively an RQ1 notebook**: it includes the detector experiments and parts of the downstream LLM evaluation workflow. The RQ1 experiment compares four conditions:
+RQ1 investigates the generalization performance of machine-learning anomaly detectors under four evaluation protocols:
 
-| Condition | Address features | Evaluation split |
-| --- | --- | --- |
-| E1 | Included | Random |
-| E2 | Removed | Random |
-| E3 | Removed | Temporal |
-| E4 | Removed | Temporal + address-disjoint |
+- **E1:** Address-included reference evaluation.
+- **E2:** Address features removed.
+- **E3:** Temporal evaluation with address features removed.
+- **E4:** Temporal and address-disjoint evaluation.
 
-These conditions help examine how apparent detector performance changes when potentially identifying features are removed and generalization is assessed under more restrictive splits.
+The experiments compare LightGBM, Logistic Regression, Random Forest, and XGBoost.
 
-### RQ2: Evidence validation
+Under the E4 protocol, LightGBM achieves:
 
-The RQ2 notebooks investigate whether explanations are supported by the detector outputs and accompanying evidence. They include different execution variants, including limited-sample runs, parallel processing, and workflows that use saved artifacts from earlier detector experiments. The available notebooks are alternatives or related experiments; they should not all be assumed to be consecutive steps of a single pipeline.
+- PR-AUC: **0.8232**
+- Anomaly F1-score: **0.7269**
 
-### RQ3: Explanation comparison
+**Manuscript correspondence:** Table 3 and supplementary Tables 9–11.
 
-The RQ3 notebooks compare numerical, tabular, two-stage, and full HCLA explanation configurations. They provide alternative evaluation scripts and metric variants.
+### RQ2 — Narrative Evidence Grounding
 
-### RQ4: Component ablation
+**Research Question:** To what extent are HCLA narratives supported by the evidence explicitly supplied to the Justification component?
 
-The RQ4 notebook examines the effect of removing selected components, including role separation, evidence constraints, and refinement, relative to the full configuration.
+RQ2 compares baseline explanations with evidence-constrained HCLA narratives.
 
-### RQ5: Robustness
+The evaluation consists of:
 
-The RQ5 notebook contains robustness-oriented tests covering repeated generation, ambiguous inputs, and adversarial prompting.
+- Main experiment: 50 matched cases × 2 conditions.
+- Stability experiment: 10 cases × 2 conditions × 10 repetitions.
+- Evaluation metrics: Evidence Support Rate (ESR), Unsupported Claim Rate (UCR), Contradiction Rate (CR), and Evidence Consistency (EC).
 
-## Environment and dependencies
+**Main findings:**
 
-The notebooks use **Python 3** and Jupyter/Google Colab-style workflows. Dependencies differ between notebooks. Imported packages include:
+| Metric | Baseline | HCLA |
+|---|---:|---:|
+| ESR ↑ | 0.8998 | 0.9672 |
+| UCR ↓ | 0.0968 | 0.0261 |
+| CR ↓ | 0.0033 | 0.0067 |
+| EC ↑ | 0.9360 | 0.9800 |
 
-- `numpy`, `pandas`, `scipy`, `matplotlib`
-- `scikit-learn`, `lightgbm`, `xgboost`, `shap`
-- `torch`
-- `openai` (client used for compatible API calls)
+The results indicate that HCLA improves evidence support and reduces unsupported claims relative to the baseline, although not every grounding metric improves.
 
-A typical starting environment can be prepared using:
+**Manuscript correspondence:** Table 4.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-python -m pip install jupyter numpy pandas scipy matplotlib scikit-learn lightgbm xgboost shap torch openai
-jupyter lab
-```
+### RQ3 — Explanation Format Comparison
 
-This is a **starting dependency list**, not a version-locked or fully validated environment specification. Some notebooks contain Google Colab-specific imports or paths and may require adjustments for local execution.
+**Research Question:** How does HCLA compare with numerical, feature-attribution, and template-based explanations in clarity, evidence integration, and calibrated usefulness?
 
-## Running the experiments
+RQ3 evaluates four explanation formats using 50 matched cases:
 
-1. Clone the repository:
+1. **Numerical:** Prediction label and anomaly probability.
+2. **Feature Attribution:** Prediction information with SHAP-based feature contributions.
+3. **Template:** Deterministic explanation based on supplied evidence.
+4. **HCLA:** LLM-generated contextual explanation using the evidence package.
 
-   ```bash
-   git clone https://github.com/HCLA-repository/research.git
-   cd research
-   ```
+A total of 200 explanations are evaluated using three metrics:
 
-2. Open the relevant notebook in Jupyter or Google Colab.
-3. Obtain the corresponding research dataset through its authorized source and configure the notebook's input paths (for example, `DATA_PATH`). The dataset is not assumed to be bundled with this repository.
-4. For notebooks using hosted LLMs, configure your own `OPENROUTER_API_KEY` securely. API access, model availability, usage limits, and costs may apply. **Do not commit API keys or credentials.**
-5. Check notebook-specific configuration cells, saved-model/artifact paths, and upstream output requirements before running.
-6. Execute the appropriate notebook and inspect the generated metrics and output artifacts.
+- Clarity
+- Evidence Integration
+- Calibrated Usefulness
 
-**Suggested order:** Start with the integrated notebook to understand the detector and evidence-generation workflow. Then select the dedicated RQ2–RQ5 notebooks needed for the relevant analysis. Run the statistical-analysis notebook after generating its required input results.
+**Reported HCLA results:**
 
-> **Reproducibility note:** The notebooks have not been verified here as a clean, end-to-end run on a fresh machine. Exact numerical reproduction can depend on the dataset version, sampling, random seeds, package versions, external model versions, API behavior, and availability of upstream artifacts. A notebook filename such as `ONECLICK` does not eliminate these prerequisites.
+| Metric | Mean | Standard Deviation |
+|---|---:|---:|
+| Clarity | 4.94 | 0.24 |
+| Evidence Integration | 4.10 | 0.30 |
+| Calibrated Usefulness | 4.78 | 0.42 |
 
-## Methodological notes
+Statistical analyses use Friedman tests and paired Wilcoxon comparisons with Holm correction.
 
-- **Generalization:** RQ1 separates random-split evaluation from more restrictive temporal and address-disjoint settings.
-- **Evidence grounding:** LLM-generated narratives should be evaluated against available evidence rather than treated as verified facts.
-- **Ablation and robustness:** Component-level and stress-test results are intended to help characterize behavior and limitations, not to guarantee reliability on unseen applications.
-- **External services:** Some experiments rely on third-party hosted language models; their outputs can vary over time.
+All reported HCLA-versus-baseline comparisons remain statistically significant after correction.
 
-## Data, privacy, and licensing
+These scores reflect automated evaluation and should not be interpreted as direct measurements of human decision performance.
 
-Raw data access and redistribution are subject to the original data provider's terms. Do not upload restricted transaction records, personal information, or credentials to this repository. Review data-handling requirements before sending any records to external model APIs.
+**Manuscript correspondence:** Tables 5 and 6.
 
-No software license is asserted by this README. If reuse or redistribution is intended, add an appropriate `LICENSE` file. Without one, normal copyright restrictions apply.
+### RQ4 — Component Ablation
 
-## Citation
+**Research Question:** What is the contribution of role separation, evidence constraints, and interactive refinement to narrative grounding and explanation quality?
 
-If you use this repository in academic work, please cite the associated HCLA publication(s). Full publication metadata and an authoritative BibTeX entry should be added once finalized. Distinguish the original framework paper from the subsequent evaluation/extension study when citing their respective contributions.
+RQ4 evaluates four configurations:
+
+- Full HCLA
+- HCLA without Role Separation
+- HCLA without Evidence Constraint
+- HCLA without Interactive Refinement
+
+The experiment uses:
+
+- 50 cases
+- 4 conditions
+- 3 repetitions
+- **600 total observations**
+
+Evaluation metrics include ESR, UCR, CR, Clarity, Trust Support, and Actionability.
+
+The results show that evidence constraints contribute most strongly to narrative grounding.
+
+For example, removing evidence constraints decreases ESR from **0.752 to 0.637** and increases UCR from **0.246 to 0.361**.
+
+However, removing constraints can increase automated explanation-quality scores, indicating a trade-off between factual grounding and presentation quality.
+
+Statistical analyses aggregate repeated observations at the case level before applying Friedman and Wilcoxon-Holm tests.
+
+**Manuscript correspondence:** Tables 7 and 12.
+
+### RQ5 — Robustness and Repeated Generation
+
+**Research Question:** How stable and robust is HCLA under repeated generation, ambiguous queries, and adversarial instructions?
+
+RQ5 evaluates three conditions:
+
+- Standard
+- Ambiguous
+- Adversarial
+
+The experiment includes 50 cases, 10 repetitions per condition, and **1,500 generated explanations**.
+
+The evaluation considers:
+
+- Evidence Support Rate
+- Unsupported Claim Rate
+- Contradiction Rate
+- Constraint Adherence
+- Semantic Consistency
+
+The reported results demonstrate high evidence support under standard and ambiguous queries.
+
+Adversarial instructions reduce constraint adherence from **0.9760 to 0.4960**, highlighting limitations of prompt-level evidence constraints.
+
+**Manuscript correspondence:** Table 8.
+
+## Models and Experimental Environment
+
+The experiments use the following components:
+
+| Component | Model or Method |
+|---|---|
+| Primary anomaly detector | LightGBM |
+| Additional detectors | Logistic Regression, Random Forest, XGBoost |
+| Explanation generation | Qwen3 235B A22B Instruct 2507 |
+| Automated explanation evaluation | Llama 3.3 70B Instruct |
+| Feature attribution | SHAP |
+| LLM API access | OpenRouter |
+| Statistical analysis | Friedman test, Wilcoxon signed-rank test, Holm correction |
+| Implementation environment | Python / Jupyter Notebook |
+
+Explanation generation and evaluation are conducted using separate language models.
+
+The reported generation temperature is 0.2, while automated evaluation uses temperature 0.0.
+
+## Reproducibility and Result Verification
+
+The repository contains selected source files and experimental artifacts corresponding to the manuscript's reported results.
+
+Available results have been organized by research question and checked against the reported experimental designs and numerical summaries.
+
+These checks support **result-level consistency** but do not constitute independent end-to-end reproduction of every experiment.
+
+Some notebooks retain outputs from preliminary or pilot executions. Such saved outputs should not be confused with the final experimental results recorded in the corresponding CSV files.
+
+For repeated-measures analyses, observations are aggregated at the appropriate case level before statistical testing.
+
+Reproducing experiments involving external language models requires valid API access, compatible model versions, the necessary input data, and the original experimental configuration.
+
+## Data Availability
+
+The experiments use a provider-labelled Bitcoin transaction dataset containing **387,419 transactions** collected between 2020 and 2024.
+
+The dataset contains 318,388 normal and 69,031 anomalous transaction records.
+
+The underlying dataset was supplied for academic research and is not included in this repository.
+
+Derived experimental artifacts may also be subject to data-sharing restrictions.
 
 ## Limitations
 
-This repository contains experimental notebooks. Some scripts are alternative implementations or exploratory variants, and not all notebooks are guaranteed to run independently. Please check each notebook's input assumptions and configuration before use. Results should be interpreted within the study's data, model, and evaluation scope.
+The reported findings should be interpreted within the experimental protocols used in the manuscript.
+
+Automated explanation-quality ratings do not establish improvements in human trust or real-world investigative performance.
+
+The experiments also do not establish complete freedom from data leakage, formal causal faithfulness, or guaranteed resistance to adversarial instructions.
+
+The proposed Evidence-Constrained Verification (ECV) algorithm is a methodological extension and was not empirically validated as part of the reported RQ1–RQ5 results.
+
+## Citation
+
+If you use this repository, please cite the associated HCLA study:
+
+**HCLA: A Human-Centered LLM-Agent Architecture for Contextualizing Digital Asset Anomaly Detection.**
+
+Please refer to the final published version for complete bibliographic information.
+
+## Research Repository
+
+https://github.com/HCLA-repository/research
