@@ -1,5 +1,0 @@
-﻿method,clarity_mean,clarity_std,clarity_median,evidence_integration_mean,evidence_integration_std,evidence_integration_median,calibrated_usefulness_mean,calibrated_usefulness_std,calibrated_usefulness_median
-Numerical,1.98,0.6223720260226275,2.0,1.0,0.0,1.0,1.14,0.3505098327538656,1.0
-Feature Attribution,2.02,0.2466096643090295,2.0,1.04,0.1979486637221575,1.0,1.08,0.2740475156178697,1.0
-Template,1.68,0.7406560798180409,2.0,1.0,0.0,1.0,1.04,0.1979486637221575,1.0
-HCLA,4.94,0.23989793748209529,5.0,4.1,0.30304576336566363,4.0,4.78,0.41845195759648024,5.0

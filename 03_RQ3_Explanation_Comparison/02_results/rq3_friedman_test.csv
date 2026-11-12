@@ -1,4 +1,0 @@
-﻿metric,test,n_cases,statistic,p_value
-clarity,Friedman,50,120.31619537275063,6.596869444244605e-26
-evidence_integration,Friedman,50,147.1764705882353,1.0710656031158496e-31
-calibrated_usefulness,Friedman,50,133.24778761061947,1.079205129777516e-28
